@@ -93,4 +93,4 @@ parameters:
   description: The full image path
   displayName: Image Stream
   required: true
-  value: voteui:latest
+  value: voteui/pipelines-vote-ui
