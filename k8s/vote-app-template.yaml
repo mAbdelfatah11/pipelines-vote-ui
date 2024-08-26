@@ -1,0 +1,96 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+name: voteui-template
+metadata:
+  name: voteui-template
+  annotation:
+    tags: python
+    openshift.io/display-name: The vote app ui template    
+    description: This Template creates a new service
+objects:
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      labels:
+        app: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+    spec:
+      port:
+        targetPort: 8080-tcp
+      to:
+        kind: Service
+        name: ${APPLICATION_NAME}
+        weight: 100
+      wildcardPolicy: None
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+    spec:
+      ports:
+      - name: 8080-tcp
+        port: 8080
+        protocol: TCP
+        targetPort: 8080
+      selector:
+        deployment: ${APPLICATION_NAME}
+      sessionAffinity: None
+      type: ClusterIP
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      labels:
+        app: ${APPLICATION_NAME}
+      name: ${APPLICATION_NAME}
+    spec:
+      progressDeadlineSeconds: 600
+      replicas: 1
+      selector:
+        matchLabels:
+          deployment: ${APPLICATION_NAME}
+      strategy:
+        rollingUpdate:
+          maxSurge: 25%
+          maxUnavailable: 25%
+        type: RollingUpdate
+      template:
+        metadata:
+          labels:
+            deployment: ${APPLICATION_NAME}
+        spec:
+          containers:
+            - image: ${IMAGE_REF}
+              imagePullPolicy: IfNotPresent
+              name: ${APPLICATION_NAME}
+              ports:
+                - containerPort: 8080
+                  protocol: TCP
+                - containerPort: 9090
+                  protocol: TCP
+              env:
+                - name: VOTING_API_SERVICE_HOST
+                  value: pipelines-vote-api
+                - name: VOTING_API_SERVICE_PORT
+                  value: "9000"
+              resources: {}
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+          dnsPolicy: ClusterFirst
+          restartPolicy: Always
+          schedulerName: default-scheduler
+          securityContext: {}
+          terminationGracePeriodSeconds: 30
+
+parameters:
+- name: APPLICATION_NAME
+  description: The name of the application you'd like to create
+  displayName: Application Name
+  required: true
+  value: voteui
+- name: IMAGE_REF
+  description: The full image path
+  displayName: Image Stream
+  required: true
+  value: voteui:latest
