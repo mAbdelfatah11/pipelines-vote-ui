@@ -1,0 +1,11 @@
+apiVersion: v2
+name: vote-ui
+description: A helm chart for the basic vote app
+type: application
+version: 0.0.1          # new chart release version
+appVersion: “1.0.0”     # deployed app version
+sources:
+- https://github.com/mAbdelfatah11/pipelines-vote-ui
+maintainers:
+- name: mahmoud abdelfattah
+  email: mahmoud.abdelfatah@gmail.com
