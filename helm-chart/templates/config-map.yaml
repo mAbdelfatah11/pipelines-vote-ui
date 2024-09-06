@@ -4,8 +4,5 @@ metadata:
   name: {{ .Release.Name }}-config
 data:
   {{- range .Values.config }}
-- name: {{ .name }}
-  value: {{ .value }}
+  {{ .name }}: {{ .value }}
   {{- end }}
-
-
