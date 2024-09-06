@@ -4,5 +4,5 @@ metadata:
   name: {{ .Release.Name }}-config
 data:
   {{- range .Values.config }}
-  {{ .name }}: {{ .value }}
+  {{ .name }}: "{{ .value }}"       # make sure that the value is quoted as a string
   {{- end }}

@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: pipelines-vote-ui
+    app: vote-ui
   name: {{ .Release.Name }}-service
 spec:
   type: ClusterIP
@@ -13,5 +13,4 @@ spec:
       protocol: TCP
   selector:
     deployment: {{ .Release.Name }}
-  sessionAffinity: None
 

@@ -2,7 +2,7 @@ apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   labels:
-    app: pipelines-vote-ui
+    app: vote-ui
   name: {{ .Release.Name }}-route
 spec:
   port:
