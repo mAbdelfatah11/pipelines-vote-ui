@@ -1,0 +1,11 @@
+deployment:
+    image: quay.io/openshift-pipeline/vote-ui
+    tag: latest
+    replicas: 2
+    includeHealthChecks: false
+
+config:
+    - name: VOTING_API_SERVICE_HOST
+      value: pipelines-vote-api
+    - name: VOTING_API_SERVICE_PORT
+      value: "9000"

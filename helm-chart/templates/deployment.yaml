@@ -2,29 +2,27 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: pipelines-vote-ui
-  name: pipelines-vote-ui
+    app: vote-ui
+  name: {{ .Release.Name }}-deployment
 spec:
-  replicas: 1
+  replicas: {{ .Values.deployment.replicas | default 1 }}
   selector:
     matchLabels:
-      app: pipelines-vote-ui
+      deployment: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: pipelines-vote-ui
+        deployment: {{ .Release.Name }}
     spec:
       containers:
-        - image: quay.io/openshift-pipeline/vote-ui:latest
+        - image: "{{ .Values.deployment.image }}":"{{ .Values.deployment.tag }}"
           imagePullPolicy: Always
-          name: pipelines-vote-ui
+          name: {{ .Release.Name }}
           ports:
             - containerPort: 8080
               protocol: TCP
             - containerPort: 9090
               protocol: TCP
-          env:
-            - name: VOTING_API_SERVICE_HOST
-              value: pipelines-vote-api
-            - name: VOTING_API_SERVICE_PORT
-              value: "9000"
+          envFrom:
+            - configMapRef:
+                name: {{ .Release.Name }}-config
