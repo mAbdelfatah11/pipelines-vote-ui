@@ -15,7 +15,7 @@ spec:
         deployment: {{ .Release.Name }}
     spec:
       containers:
-        - image: "{{ .Values.deployment.image }}":"{{ .Values.deployment.tag }}"
+        - image: "{{ .Values.deployment.image }}:{{ .Values.deployment.tag }}"
           imagePullPolicy: Always
           name: {{ .Release.Name }}
           ports:
